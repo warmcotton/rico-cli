@@ -562,7 +562,7 @@ $(document).ready(function(){
   $("#search_input").on("keyup", function(key) {
     if (key.keyCode==13) {
       const query = $("#search_input_box").find("input").val();
-      location.href = "/items?search="+query+"&page=0"+"&size=6";
+      location.href = "/items?search="+query+"&page=0"+"&size=6"+"&sort=createdAt,desc";
     }
   })
  });
