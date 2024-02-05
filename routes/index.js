@@ -23,7 +23,8 @@ router.get('/cart', function(req, res, next) {
 
 
 router.get('/login', function(req, res, next) {
-  res.render('login', { title: 'Express' });
+  const path = req.query.path ?? "";
+  res.render('login', { path: path });
 });
 
 
@@ -36,4 +37,8 @@ router.get('/order', function(req, res, next) {
   res.render('order', { title: 'Express' });
 });
 
+
+router.get('/items/category', function(req, res, next) {
+  res.render('category', { title: 'Express' });
+});
 module.exports = router;
