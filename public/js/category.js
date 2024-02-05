@@ -1,28 +1,27 @@
 const rest = "http://192.168.219.108:5050";
-const itemRouter = "/itemsv2";
-const categoryRouter = "/category";
+const categoryRouter = "/items/category";
 
 $(document).ready(function() {
-    getPageItems(rest+itemRouter+parseUrl());
-    getCategory(rest+categoryRouter);
+    getPageItems(rest+categoryRouter+parseUrl());
+    getCategory(rest+"/category");
 
-    const {search, page, size, sort} = getQuery();
+    const {category, page, size, sort} = getQuery();
     changeBox(size, sort);
 
     $(".num-box").on("change", function() {
         const size = $(this).val();
 
-        const query = "?search="+search+"&page="+
+        const query = "?category="+category+"&page="+
         0+"&size="+size+"&sort="+sort;
-        location.href = location.origin+"/items"+query;
+        location.href = location.origin+categoryRouter+query;
     })
 
     $(".sort-box").on("change", function() {
         const sort = $(this).val();
 
-        const query = "?search="+search+"&page="+
+        const query = "?category="+category+"&page="+
         0+"&size="+size+"&sort="+sort;
-        location.href = location.origin+"/items"+query;
+        location.href = location.origin+categoryRouter+query;
     })
 });
 
@@ -37,7 +36,6 @@ function getPageItems(path, method='GET') {
         },
         error : function(xhr, status, error) {
             alert("error : "+xhr.status+"  "+xhr.responseText );
-            // location.href="/"
         }
     })
 }
@@ -51,23 +49,23 @@ function getCategory(path, method='GET') {
             changeCategory(data);
         },
         error : function(xhr, status, error) {
-            alert("error : "+xhr.status+"  "+xhr.responseText );
+            alert("error : "+xhr.status+"  "+xhr.responseText);
         }
     })
 }
 
 function parseUrl() {
     let url = location.href;
-    return url.substring(url.indexOf("items")).replace('items','');
+    return url.substring(url.indexOf("category")).replace('category','');
 }
 
 function printItems(result) {
     result.content.forEach(res => {
-        createProduct($("#product-wrapper"), res);
+        create($("#product-wrapper"), res);
     });
 }
 
-function createProduct(parent, res) {
+function create(jq, res) {
     let singleProduct = 
     `<div class="col-lg-4 col-md-6">
         <div class="single-product">
@@ -103,7 +101,7 @@ function createProduct(parent, res) {
             </div>
         </div>
     </div>`
-    parent.append(singleProduct);
+    jq.append(singleProduct);
 }
 
 function changeCategory(res) {
@@ -245,10 +243,10 @@ function changePage(result) {
 }
 
 function updatePageurl(page_, query) {
-    const {search, page, size, sort} = query;
-    const qp = "?search="+search+"&page="+page_+"&size="+size+"&sort="+sort;
+    const {category, page, size, sort} = query;
+    const qp = "?category="+category+"&page="+page_+"&size="+size+"&sort="+sort;
 
-    return location.origin+"/items"+qp;
+    return location.origin+"/category"+qp;
 }
 
 
@@ -261,10 +259,10 @@ function getQuery() {
     query.split('&')
     .forEach(res => parameters[res.split('=')[0]]=res.split('=')[1]);
 
-    const search = parameters.search ?? "";
+    const category = parameters.category ?? "";
     const page = parameters.page ?? "";
     const size = parameters.size ?? "";
     const sort = parameters.sort ?? "";
 
-    return {search, page, size, sort};
+    return {category, page, size, sort};
 }
