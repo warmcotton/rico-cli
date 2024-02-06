@@ -104,7 +104,7 @@
     height: 100%;
     width: 100%;
     content: "";
-    background: #000;
+    background: #ffffff00;
     opacity: 0;
     -webkit-transform: skew(40deg);
     -moz-transform: skew(40deg);
@@ -165,7 +165,7 @@ body {
   font-size: 14px;
   font-family: "Roboto", sans-serif;
   font-weight: 400;
-  color: #777777;
+  color: #303030;
   background: #fff; }
 
 html,
@@ -423,18 +423,20 @@ h1, h2, h3, h4, h5, h6 {
   padding: 15px 0px 30px 0px;
   min-width: 800px; }
   .progress-table .serial {
-    width: 11.83%;
-    padding-left: 30px; }
+    width: 10.00%;
+    padding-left: 15px; }
+  .progress-table .link {
+    width: 15.00%;
+    margin-right: 15px; }
+  .progress-table .date {
+    width: 20.00%; }
   .progress-table .country {
-    width: 28.07%; }
+    width: 40.00%; }
   .progress-table .visit {
-    width: 19.74%; }
-  .progress-table .percentage {
-    width: 40.36%;
-    padding-right: 50px; }
+    width: 15.00%; }
   .progress-table .table-head {
     display: flex; }
-    .progress-table .table-head .serial, .progress-table .table-head .country, .progress-table .table-head .visit, .progress-table .table-head .percentage {
+    .progress-table .table-head .serial, .progress-table .table-head .link, .progress-table .table-head .date ,.progress-table .table-head .country, .progress-table .table-head .visit, .progress-table .table-head {
       color: #222222;
       line-height: 40px;
       text-transform: uppercase;
@@ -443,34 +445,13 @@ h1, h2, h3, h4, h5, h6 {
     padding: 15px 0;
     border-top: 1px solid #edf3fd;
     display: flex; }
-    .progress-table .table-row .serial, .progress-table .table-row .country, .progress-table .table-row .visit, .progress-table .table-row .percentage {
+    .progress-table .table-row .serial, .progress-table .table-row .link, .progress-table .table-row .date, .progress-table .table-row .country, .progress-table .table-row .visit, .progress-table .table-row {
       display: flex;
       align-items: center; }
     .progress-table .table-row .country img {
-      margin-right: 15px; }
-    .progress-table .table-row .percentage .progress {
-      width: 80%;
-      border-radius: 0px;
-      background: transparent; }
-      .progress-table .table-row .percentage .progress .progress-bar {
-        height: 5px;
-        line-height: 5px; }
-        .progress-table .table-row .percentage .progress .progress-bar.color-1 {
-          background-color: #6382e6; }
-        .progress-table .table-row .percentage .progress .progress-bar.color-2 {
-          background-color: #e66686; }
-        .progress-table .table-row .percentage .progress .progress-bar.color-3 {
-          background-color: #f09359; }
-        .progress-table .table-row .percentage .progress .progress-bar.color-4 {
-          background-color: #73fbaf; }
-        .progress-table .table-row .percentage .progress .progress-bar.color-5 {
-          background-color: #73fbaf; }
-        .progress-table .table-row .percentage .progress .progress-bar.color-6 {
-          background-color: #6382e6; }
-        .progress-table .table-row .percentage .progress .progress-bar.color-7 {
-          background-color: #a367e7; }
-        .progress-table .table-row .percentage .progress .progress-bar.color-8 {
-          background-color: #e66686; }
+      margin-right: 10px;
+      max-width: 50px;
+      max-height: 30px; }
 
 .single-gallery-image {
   margin-top: 30px;
@@ -3983,7 +3964,7 @@ label {
     margin-right: 10px;
     border-radius: 5px; }
   .s_product_text .card_area .buy-btn {
-      line-height: 38px;
+    line-height: 38px;
     padding: 0px 38px;
     text-transform: uppercase;
     margin-right: 10px;
