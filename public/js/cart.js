@@ -3,25 +3,67 @@ const cartRouter = "/cart";
 
 $(document).ready(function() {
     getCart(rest+cartRouter);
+
+    $('#order').on('click', function() {
+        if($('.product_count').length === 0) {
+            alert("상품이 없습니다.");
+            return false;
+        } 
+        orderCart(rest+"/order/cart");
+    })
 });
+
+function orderCart(path, method='GET') {
+    const token = localStorage.getItem("accessToken");
+    if(token) {
+        $.ajax({
+            type: method,
+            url: path,
+            beforeSend : function(xhr){
+                xhr.setRequestHeader("Authorization", "Bearer "+token);
+            },
+            contentType: 'application/json',
+            success: function(data, status, xhr) {
+                if(!confirm("주문 하시겠습니까?")) {
+                    return;
+                }
+                location.href=location.href;
+            },
+            error: function(xhr, status, error) {
+                alert("error : "+xhr.status+"  "+xhr.responseText );
+            }
+        });
+    } else{
+        alert("로그인이 필요합니다.");
+        location.href="/login?path="+location.pathname+location.search;
+    }
+}
 
 function getCart(path, method='GET') {
     const token = localStorage.getItem("accessToken");
-    $.ajax({
-        type: method,
-        url: path,
-        beforeSend : function(xhr){
-            xhr.setRequestHeader("Authorization", "Bearer "+token);
-        },
-        contentType: 'application/json',
-        success: function(data, status, xhr) {
-            createCartItem(data);
-        },
-        error: function(xhr, status, error) {
-            alert("error : "+xhr.status+"  "+xhr.responseText );
-            if (xhr.responseText === "로그인이 필요합니다.") location.href="/login?path="+location.pathname+location.search;
-        }
-    });
+    if(token) {
+        $.ajax({
+            type: method,
+            url: path,
+            beforeSend : function(xhr){
+                xhr.setRequestHeader("Authorization", "Bearer "+token);
+            },
+            contentType: 'application/json',
+            success: function(data, status, xhr) {
+                if(data) {
+                    createCartItem(data);
+                } else {
+                    
+                }
+            },
+            error: function(xhr, status, error) {
+                alert("error : "+xhr.status+"  "+xhr.responseText );
+            }
+        });
+    } else{
+        alert("로그인이 필요합니다.");
+        location.href="/login?path="+location.pathname+location.search;
+    }
 }
 
 function createCartItem(data) {
@@ -39,7 +81,7 @@ function cartItem(parent, cartItem) {
         <td>
             <div class="media">
                 <div class="d-flex">
-                    <img src="/img/cart.jpg" alt="">
+                    <img style="max-height: 150px; max-width: 100px" src="`+rest+cartItem.itemImg[0].imgUrl+`" alt="">
                 </div>
                 <div class="media-body">
                     <p>`+cartItem.itemName+`</p>
@@ -52,7 +94,7 @@ function cartItem(parent, cartItem) {
         </td>
         <td>
             <div class="product_count">
-                <input class="id" type="hidden" value="`+cartItem.id+`">
+                <input class="id" type="hidden" value="`+cartItem.itemId+`">
                 <input class="count" type="Number" maxlength="12" value="`+cartItem.count+`" title="Quantity:"
                     class="input-text qty" readonly >
                 <button onclick="increase(this)" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
@@ -78,10 +120,10 @@ function increase(button) {
         alert("최대 주문 수량 입니다")
         return;
     }
-    if(!confirm("Are you sure?")) {
+    if(!confirm("수량을 추가하시겠습니까?")) {
         return;
     }
-    updateCartItem(rest+cartRouter, {cart_item_id:id.val(), count:count+1});
+    updateCartItem(rest+cartRouter, {item_id:id.val(), count:count+1});
 }
 
 
@@ -93,39 +135,42 @@ function decrease(button) {
     if(isNaN(count) || count <= 1) {
         return;
     }
-    if(!confirm("Are you sure?")) {
+    if(!confirm("수량을 차감하시겠습니까?")) {
         return;
     }
 
-    updateCartItem(rest+cartRouter, {cart_item_id:id.val(), count:count-1});
+    updateCartItem(rest+cartRouter, {item_id:id.val(), count:count-1});
 }
 
 
 function updateCartItem(path, params, method='PUT') {
     const token = localStorage.getItem("accessToken");
-
-    $.ajax({
-        type: method,
-        url: path,
-        beforeSend : function(xhr){
-            xhr.setRequestHeader("Authorization", "Bearer "+token);
-        },
-        data: JSON.stringify(params),
-        contentType: 'application/json',
-        success: function(data, status, xhr) {
-            updateTag(data);
-        },
-        error: function(xhr, status, error) {
-            alert("error : "+xhr.status+"  "+xhr.responseText );
-            if (xhr.responseText === "로그인이 필요합니다.") location.href="/login?path="+location.pathname+location.search;
-        }
-    });
+    if(token) {
+        $.ajax({
+            type: method,
+            url: path,
+            beforeSend : function(xhr){
+                xhr.setRequestHeader("Authorization", "Bearer "+token);
+            },
+            data: JSON.stringify(params),
+            contentType: 'application/json',
+            success: function(data, status, xhr) {
+                updateTag(data);
+            },
+            error: function(xhr, status, error) {
+                alert("error : "+xhr.status+"  "+xhr.responseText );
+            }
+        });
+    } else{
+        alert("로그인이 필요합니다.");
+        location.href="/login?path="+location.pathname+location.search;
+    }
 }
 
 function updateTag(data) {
     console.log(data);
-    const input = $('.id[value="'+data.id+'"]').closest('.product_count').find('input[type="number"]');
-    const total = $('.id[value="'+data.id+'"]').closest('tr').find('.total_item_price');
+    const input = $('.id[value="'+data.itemId+'"]').closest('.product_count').find('input[type="number"]');
+    const total = $('.id[value="'+data.itemId+'"]').closest('tr').find('.total_item_price');
 
     input.val(data.count);
     total.find('input').val(data.count*data.price);

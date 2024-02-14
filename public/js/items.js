@@ -1,5 +1,5 @@
-const rest = "http://192.168.219.108:5050";
-const itemRouter = "/itemsv2";
+const rest = "http://192.168.219.108:8080";
+const itemRouter = "/items";
 const categoryRouter = "/category";
 
 $(document).ready(function() {
@@ -81,24 +81,6 @@ function createProduct(parent, res) {
                 <div class="price">
                     <h6> `+res.price+` 원</h6>
                     <h6 class="l-through">`+res.user+`</h6>
-                </div>
-                <div class="prd-bottom">
-                    <a href="" class="social-info">
-                        <span class="ti-bag"></span>
-                        <p class="hover-text">add to bag</p>
-                    </a>
-                    <a href="" class="social-info">
-                        <span class="lnr lnr-heart"></span>
-                        <p class="hover-text">Wishlist</p>
-                    </a>
-                    <a href="" class="social-info">
-                        <span class="lnr lnr-sync"></span>
-                        <p class="hover-text">compare</p>
-                    </a>
-                    <a href="" class="social-info">
-                        <span class="lnr lnr-move"></span>
-                        <p class="hover-text">view more</p>
-                    </a>
                 </div>
             </div>
         </div>

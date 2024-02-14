@@ -1,4 +1,4 @@
-const rest = "http://192.168.219.108:5050";
+const rest = "http://192.168.219.108:8080";
 const loginRouter = "/login";
 
 $(document).ready(function() {
@@ -13,6 +13,21 @@ $(document).ready(function() {
     console.log($('#path').val()); // /item?itemid=22
 
 });
+
+function parseJwt (token) {
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload); 
+}
+
+//쿠키 저장
+// expiredays 는 일자 정수 - 365년 1년 쿠키
+function setCookie(key, value, expiredays) {
+    document.cookie = key + "=" + escape(value) + "; path=/; expires=" + expiredays + ";";
+}
 
 function submitLogin(path, params) {
     $.ajax({

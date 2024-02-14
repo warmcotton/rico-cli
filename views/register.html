@@ -1,0 +1,94 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+            <h1>Login/Register</h1>
+            <nav class="d-flex align-items-center">
+                <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                <a href="product-list.html">Login/Register</a>
+            </nav>
+            </div>
+        </div>
+        </div>
+    </section>
+    <section class="login_box_area section_gap">
+        <div class="container">
+        <div class="row">
+            <div class="col-lg">
+            <div class="login_form_inner">
+                <h3>Registration</h3>
+                <form class="row login_form" method="post" action="/register" id="registerForm" novalidate="novalidate">
+                <div class="col-md-12 form-group">
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'">
+                </div>
+                <div class="col-md-12 form-group">
+                    <input type="text" class="form-control" id="email" name="email" placeholder="email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'email'">
+                </div>
+                <div class="col-md-12 form-group">
+                    <input type="text" class="form-control" id="password" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+                </div>
+                <div class="col-md-12 form-group">
+                    <input type="text" class="form-control" id="check" name="check" placeholder="Password Check" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password Check'">
+                </div>
+                <div class="col-md-12 form-group">
+                    <button type="button" id="loginFormSubmit" value="submit" class="primary-btn">Sign up</button>
+                </div>
+                </form>
+            </div>
+            </div>
+        </div>
+        </div>
+    </section>
+    <script>
+        const host = location.hostname;
+        const port = ":8080";
+
+        $(document).ready(function() {
+            $('#loginFormSubmit').on('click', function() {      
+                const name = $('#name').val();
+                const email = $('#email').val();
+                const password = $('#password').val();
+                const check = $('#check').val();
+                const regex = /^[a-zA-Z0-9]+@[a-zA-Z.-]+\.[a-zA-Z]{2,4}$/;
+
+                if(!regex.test(email)) {
+                    alert("email 확인");
+                    return false;
+                }
+                if(!/^[^\s]{2,20}$/.test(name)) {
+                    alert("name 확인 ( 2~20 자리 )");
+                    return false;
+                }
+                if(!/^[a-zA-Z0-9!@#$]{8,20}$/.test(password)) {
+                    alert("password 확인 (8~20 자리 )");
+                    return false;
+                } 
+                if(password !== check) {
+                    alert("password check 확인");
+                    return false;
+                }
+                register("http://"+host+port+"/register", {email:email, password:password, name:name});
+            })
+        })
+
+        function register(path, params, method="POST") {
+            $.ajax({
+                type: method,
+                url: path,
+                contentType: 'application/json',
+                data: JSON.stringify(params),
+                success: function(data, status, xhr) {
+                    alert("가입 완료");
+                    location.href="/";
+                },
+                error: function(xhr, status, error) {
+                    alert("error : "+xhr.status+"  "+xhr.responseText );
+                }
+            });
+        }
+    </script>
+  {% endblock %}

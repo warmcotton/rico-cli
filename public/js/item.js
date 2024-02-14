@@ -1,17 +1,30 @@
-const rest = "http://192.168.219.108:5050";
+const rest = "http://192.168.219.108:8080";
 const itemRouter = "/item";
 const reivewRouter = "/reviews/"+parseUrl().replace("?itemid=","");
+const cartRouter = "/cart";
+const orderRouter = "/order/item";
 
 $(document).ready(function() {
-    getItem(rest+itemRouter+parseUrl());
+    getItem(rest+itemRouter+parseUrl().replace("?itemid=","/"));
     getReview(rest+reivewRouter);
 
-    $(".num-box").on("change", function() {
-        //구매
+    $(document).on("click","#orderItem",function() {
+        if(!confirm("상품을 주문하시겠습니까?")) {
+            return;
+        }
+        const count = $('#sst').val();
+        const id = $('#itemId').val();
+        orderItem(rest+orderRouter, {item_id:id, count:count});
+
     })
 
-    $(".sort-box").on("change", function() {
-        //카트담기
+    $(document).on("click","#addTocart",function() {
+        if(!confirm("상품을 추가하시겠습니까?")) {
+            return;
+        }
+        const count = $('#sst').val();
+        const id = $('#itemId').val();
+        addTocart(rest+cartRouter, {item_id:id, count:count});
     })
 
     $("#submit_review").on("click", function() {
@@ -25,13 +38,6 @@ $(document).ready(function() {
             submitReview(rest+"/review", {itemId:itemId, review:review, rating:rating});
         }
     });
-
-    $(".sort-box").on("change", function() {
-        //수량선택
-    })
-
-
-
 });
 
 function parseUrl() {
@@ -66,6 +72,49 @@ function getReview(path, method='GET') {
         }
     })
 }
+function orderItem(path, params, method='POST') {
+    const token = localStorage.getItem("accessToken");
+    $.ajax({
+        type: method,
+        url: path,
+        beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", "Bearer "+token);
+        },
+        contentType: 'application/json',
+        data: JSON.stringify(params), 
+        success: function(data, status, xhr) {
+            alert("주문 완료");
+        },
+        error: function(xhr, status, error) {
+            alert("error : "+xhr.status+"  "+xhr.responseText );
+            if (xhr.responseText === "로그인이 필요합니다.") location.href="/login?path="+location.pathname+location.search;
+        }
+    });
+}
+// /cart/add {"itemId":"6", "quantity":"5"}
+function addTocart(path, params, method='POST') {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+        $.ajax({
+            type: method,
+            url: path,
+            beforeSend : function(xhr){
+                xhr.setRequestHeader("Authorization", "Bearer "+token);
+            },
+            contentType: 'application/json',
+            data: JSON.stringify(params), 
+            success: function(data, status, xhr) {
+                alert("추가 완료");
+            },
+            error: function(xhr, status, error) {
+                alert("error : "+xhr.status+"  "+xhr.responseText );
+            }
+        });
+    } else{
+        alert("로그인이 필요합니다.");
+        location.href="/login?path="+location.pathname+location.search;
+    }
+}
 
 function submitReview(path, params, method='POST') {
     const token = localStorage.getItem("accessToken");
@@ -78,8 +127,7 @@ function submitReview(path, params, method='POST') {
         contentType: 'application/json',
         data: JSON.stringify(params), 
         success: function(data, status, xhr) {
-            //redire
-            console.log("Review submitted successfully");
+            location.href = location.href;
         },
         error: function(xhr, status, error) {
             alert("error : "+xhr.status+"  "+xhr.responseText );
@@ -142,8 +190,9 @@ function printItemInfo(res) {
     </div>`;
     const btn = 
     `<div class="card_area d-flex align-items-center">
-        <a class="primary-btn" href="`+rest+"/addtoCart/"+res.id+`">장바구니 담기</a>
-        <a class="buy-btn" href="`+rest+"/order/"+res.id+`">바로 주문</a>
+        <input type="hidden" id="itemId" value="`+res.id+`">
+        <a class="primary-btn" id="addTocart" style="cursor:pointer;">장바구니 담기</a>
+        <a class="buy-btn" id="orderItem"style="cursor:pointer;">바로 주문</a>
         <a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>
         <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
     </div>`;

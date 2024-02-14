@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+	<!-- Start Banner Area -->
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>Carts Page</h1>
+					<nav class="d-flex align-items-center">
+						<a href="/">Home<span class="lnr lnr-arrow-right"></span></a>
+						<a href="/carts">Carts</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Banner Area -->
+	<!-- Start Align Area -->
+	<div class="whole-wrap pb-100">
+		<div class="container">
+			<div class="section-top-border">
+				<h3 class="mb-30">주문 내역</h3>
+				<div class="progress-table-wrap">
+					<div class="progress-table">
+						<div class="table-head">
+							<div class="serial">ID</div>
+                            <div class="country">상품 목록</div>
+                            <div class="date">시간</div>
+                            <div class="visit">합계</div>
+                            <div class="link">주문 상태</div>
+						</div>
+						<div class="table-row" style="display: flex; justify-content: center;" id="order_n">
+							<p>주문 이력이 없습니다.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Align Area -->
+	<script src="/js/orders.js"></script>
+{% endblock %}
